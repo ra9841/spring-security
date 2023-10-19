@@ -89,4 +89,36 @@ public class UserServiceImpl implements UserService{
       }
 
     }
+
+    @Override
+    public String deleteRecord(String username) throws Exception {
+        Optional<UserInfo>existUser  =userRepository.findByUsername(username);
+        if(existUser.isPresent()){
+            UserInfo userInfo=existUser.get();
+            userRepository.delete(userInfo);
+            return "delete successfully";
+        }else{
+            throw new Exception("user not found....");
+        }
+
+    }
+
+    @Override
+    public UserDto updatinguserInforamtion(UserDto userDto, String username) throws Exception {
+        Optional<UserInfo>existUser  =userRepository.findByUsername(username);
+        if(existUser.isPresent()) {
+            UserInfo userInfo = existUser.get();
+            userInfo.setEmail(userDto.getEmail());
+            userInfo.setPassword(userDto.getPassword());
+            userInfo.setRoles(userDto.getRoles());
+            userInfo.setUsername(userDto.getUsername());
+            userRepository.save(userInfo);
+            UserDto userDto1=new UserDto();
+            BeanUtils.copyProperties(userInfo,userDto1);
+            return userDto1;
+        }else{
+            throw new Exception("user not found....");
+        }
+
+    }
 }

@@ -14,4 +14,8 @@ public interface UserService {
     List<UserDto> getAllRecord();
 
     UserDto getRecordByUsername(String username);
+
+    String deleteRecord(String username) throws Exception;
+
+    UserDto updatinguserInforamtion(UserDto userDto, String username) throws Exception;
 }

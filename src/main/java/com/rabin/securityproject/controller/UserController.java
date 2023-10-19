@@ -19,39 +19,47 @@ public class UserController {
     private UserService userService;
 
 
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
     public AuthenticateResponse savingTheRecords(@RequestBody UserDto userDto) throws Exception {
-        return userService.registrationOfUserInfo(userDto);
+        return userService.registrationOfUserInfo(userDto);  //response is token
     }
 
 
     @PostMapping("/authenticate")
-    public AuthenticateResponse authenticate(@RequestBody AuthenticateRequest request){
-      return  userService.authenticate(request);
+    public AuthenticateResponse authenticate(@RequestBody AuthenticateRequest request) {
+        return userService.authenticate(request);
     }
 
     @GetMapping("/welcome")
-    public String welcome(){
+    public String welcome() {
         return "welcome to java class";
     }
 
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public List<UserDto> getAllRecord(){
-     return  userService.getAllRecord();
+    public List<UserDto> getAllRecord() {
+        return userService.getAllRecord();
     }
 
     @GetMapping("/{username}")
     @PreAuthorize("hasAuthority('USER')")
-    public UserDto getRecordByUsername(@PathVariable String username){
-     return   userService.getRecordByUsername(username);
+    public UserDto getRecordByUsername(@PathVariable String username) {
+        return userService.getRecordByUsername(username);
     }
 
+    @DeleteMapping("/delete/{username}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String deleteRecord(@PathVariable String username) throws Exception {
+        return userService.deleteRecord(username);
+    }
 
-
+    @PostMapping("/update/{username}")
+    @PreAuthorize("hasAuthority('USER')")
+    public UserDto updatingUserInfo(@RequestBody UserDto userDto,@PathVariable String username) throws Exception {
+       return userService.updatinguserInforamtion(userDto,username);
+    }
 
 }
