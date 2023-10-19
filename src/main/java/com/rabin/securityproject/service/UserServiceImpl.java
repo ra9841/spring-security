@@ -55,9 +55,9 @@ public class UserServiceImpl implements UserService{
     public AuthenticateResponse authenticate(AuthenticateRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
 
-        Optional<UserInfo> user=userRepository.findByUsername(request.getUsername());
-        if(user.isPresent()){
-            String jwtToken=jwtService.generateToken(user.get());
+        Optional<UserInfo> existUser=userRepository.findByUsername(request.getUsername());
+        if(existUser.isPresent()){
+            String jwtToken=jwtService.generateToken(existUser.get());
             return new AuthenticateResponse(jwtToken);
         }else{
             return new AuthenticateResponse("User not found");

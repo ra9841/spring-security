@@ -17,12 +17,13 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+    //Random Encryption key generator
     private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
-    }
+    } //method of extractClaim is down
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractALLClaims(token);
@@ -32,7 +33,7 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
-    }
+    }//method of generateToken is down
 
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
@@ -50,26 +51,26 @@ public class JwtService {
     private Claims extractALLClaims(String token) {
         return Jwts
                 .parserBuilder()
-                .setSigningKey(getSignInKey())
+                .setSigningKey(getSignInKey())  //method of getSignInKey is down
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(token) //try to see this parseClaimsJws some have parseClaimsJwt(it may give error: Signed Claims JWSs are not supported)
                 .getBody();
     }
 
     private Key getSignInKey() {
-        byte[] KeyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] KeyBytes = Decoders.BASE64.decode(SECRET_KEY); //we define this SECRET_KEY at top
         return Keys.hmacShaKeyFor(KeyBytes);
     }
 
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);//method of isTokenExpired is down
     }
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
-    }
+    }//method of extractExpiration is down
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
